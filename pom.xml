@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                edu.liceolapaz.mgr.jugadoresbasket/edu.liceolapaz.mgr.jugadoresbasket.LoginController
+                                edu.liceolapaz.mgr.jugadoresbasket/edu.liceolapaz.mgr.jugadoresbasket.BasketApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
