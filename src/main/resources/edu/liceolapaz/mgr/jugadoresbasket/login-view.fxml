@@ -12,7 +12,7 @@
 
 
 <?import javafx.scene.control.PasswordField?>
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.liceolapaz.mgr.jugadoresbasket.BasketApplication">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="307.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="edu.liceolapaz.mgr.jugadoresbasket.MainApp">
     <children>
         <Label alignment="CENTER" prefHeight="63.0" prefWidth="599.0" text="Inicio de Sesión">
             <font>

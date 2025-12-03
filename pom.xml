@@ -27,6 +27,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>9.5.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>${junit.version}</version>
@@ -61,7 +67,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                edu.liceolapaz.mgr.jugadoresbasket/edu.liceolapaz.mgr.jugadoresbasket.BasketApplication
+                                edu.liceolapaz.mgr.jugadoresbasket/edu.liceolapaz.mgr.jugadoresbasket.MainApp
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
