@@ -55,17 +55,19 @@ public class LoginController implements Initializable {
             if (usuarioDAO.validarCredenciales(username, password)) {
                 System.out.println("Login correcto: " + username);
 
-
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Bienvenido", "Login correcto. Cargando sistema...");
 
-
-            } else {
+                cambiarEscena(event, "basket-view.fxml");
+            }
+            else {
                 mostrarAlerta(Alert.AlertType.ERROR, "Error de Acceso", "Credenciales incorrectas");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
             mostrarAlerta(Alert.AlertType.ERROR, "Error Crítico", "Fallo en la conexión con la base de datos.");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
