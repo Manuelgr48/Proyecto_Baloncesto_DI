@@ -15,6 +15,7 @@ public class Jugador {
     private double salarioBruto;
     private int equipoId;
     private String nombreEquipo;
+    private String conferencia;
 
     public Jugador() {
     }
@@ -78,4 +79,7 @@ public class Jugador {
 
     public String getNombreEquipo() { return nombreEquipo; }
     public void setNombreEquipo(String nombreEquipo) { this.nombreEquipo = nombreEquipo; }
+
+    public String getConferencia() { return conferencia; }
+    public void setConferencia(String conferencia) { this.conferencia = conferencia; }
 }

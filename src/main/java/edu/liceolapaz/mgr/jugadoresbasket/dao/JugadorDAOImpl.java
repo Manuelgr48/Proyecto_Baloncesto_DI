@@ -13,10 +13,9 @@ public class JugadorDAOImpl implements JugadorDAO {
         List<Jugador> lista = new ArrayList<>();
 
         String sql = """
-                 SELECT j.*, e.nombre AS nombre_equipo 
+                 SELECT j.*, e.nombre AS nombre_equipo,e.conferencia
                 FROM jugadores j 
-                LEFT JOIN equipos e ON j.equipo_id = e.id
-                """;
+                LEFT JOIN equipos e ON j.equipo_id = e.id""";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -39,9 +38,8 @@ public class JugadorDAOImpl implements JugadorDAO {
                 j.setLesionado(rs.getBoolean("lesionado"));
                 j.setSalarioBruto(rs.getDouble("salario_bruto"));
                 j.setEquipoId(rs.getInt("equipo_id"));
-
                 j.setNombreEquipo(rs.getString("nombre_equipo"));
-
+                j.setConferencia(rs.getString("conferencia"));
 
                 lista.add(j);
             }

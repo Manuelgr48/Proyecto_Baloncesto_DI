@@ -21,13 +21,14 @@
             <TextField fx:id="textoBuscarNombre" promptText="Escribe un nombre..." />
 
             <Label text="Conferencia:" />
-            <RadioButton fx:id="radioTodas" selected="true" text="Todas">
-                <toggleGroup>
-                    <ToggleGroup fx:id="tgConferencia" />
-                </toggleGroup>
-            </RadioButton>
-            <RadioButton fx:id="radioEste" text="ESTE" toggleGroup="$tgConferencia" />
-            <RadioButton fx:id="radioOeste" text="OESTE" toggleGroup="$tgConferencia" />
+
+            <fx:define>
+                <ToggleGroup fx:id="toggleConferencia" />
+            </fx:define>
+
+            <RadioButton fx:id="rbTodas" selected="true" text="Todas" toggleGroup="$toggleConferencia" />
+            <RadioButton fx:id="rbEste" text="ESTE" toggleGroup="$toggleConferencia" />
+            <RadioButton fx:id="rbOeste" text="OESTE" toggleGroup="$toggleConferencia" />
 
             <Separator prefWidth="200.0" />
 
