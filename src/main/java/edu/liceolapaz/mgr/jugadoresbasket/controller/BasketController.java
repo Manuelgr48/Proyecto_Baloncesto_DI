@@ -1,14 +1,18 @@
 package edu.liceolapaz.mgr.jugadoresbasket.controller;
 
+import edu.liceolapaz.mgr.jugadoresbasket.dao.JugadorDAO;
+import edu.liceolapaz.mgr.jugadoresbasket.dao.JugadorDAOImpl;
 import edu.liceolapaz.mgr.jugadoresbasket.model.Equipo;
 import edu.liceolapaz.mgr.jugadoresbasket.model.Jugador;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class BasketController implements Initializable {
@@ -23,7 +27,7 @@ public class BasketController implements Initializable {
     @FXML private TableColumn<Jugador, String> colNombre;
     @FXML private TableColumn<Jugador, String> colApellidos;
     @FXML private TableColumn<Jugador, String> colPosicion;
-    @FXML private TableColumn<Jugador, String> colEquipo; // Nombre del equipo
+    @FXML private TableColumn<Jugador, String> colEquipo;
     @FXML private TableColumn<Jugador, Integer> colAltura;
     @FXML private TableColumn<Jugador, Double> colSalarioBruto;
     @FXML private TableColumn<Jugador, Double> colSalarioNeto;
@@ -35,7 +39,7 @@ public class BasketController implements Initializable {
     @FXML private TextField textoPeso;
     @FXML private TextField textoSalario;
     @FXML private ComboBox<String> comboPosicion;
-    @FXML private ComboBox<Equipo> comboEquipo; // El combo guarda objetos Equipo
+    @FXML private ComboBox<Equipo> comboEquipo;
     @FXML private CheckBox checkLesionado;
     @FXML private Button botonGuardar;
     @FXML private Button botonEliminar;
@@ -43,25 +47,66 @@ public class BasketController implements Initializable {
     @FXML private Button botonLimpiarFiltros;
     @FXML private Button botonFavoritos;
 
+    private JugadorDAO jugadorDAO;
+    private ObservableList<Jugador> masterData; // Lista principal de datos
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        jugadorDAO = new JugadorDAOImpl();
+
         configurarTabla();
         configurarFiltros();
         cargarCombosAuxiliares();
+
+        cargarJugadores();
+    }
+
+    private void cargarJugadores() {
+        List<Jugador> jugadoresDB = jugadorDAO.getAllJugadores();
+
+        masterData = FXCollections.observableArrayList(jugadoresDB);
+
+        tablaJugadores.setItems(masterData);
+
+        System.out.println("Datos cargados: " + masterData.size() + " jugadores.");
     }
 
     private void configurarTabla() {
+        //Añadi un formateador porque se veian en notacion cientifica los salarios
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         colPosicion.setCellValueFactory(new PropertyValueFactory<>("posicion"));
         colAltura.setCellValueFactory(new PropertyValueFactory<>("alturaCm"));
-        colSalarioBruto.setCellValueFactory(new PropertyValueFactory<>("salarioBruto"));
-
         colEquipo.setCellValueFactory(new PropertyValueFactory<>("nombreEquipo"));
-
-        colSalarioNeto.setCellValueFactory(new PropertyValueFactory<>("salarioNeto"));
         colEdad.setCellValueFactory(new PropertyValueFactory<>("edad"));
+        colSalarioBruto.setCellValueFactory(new PropertyValueFactory<>("salarioBruto"));
+        colSalarioNeto.setCellValueFactory(new PropertyValueFactory<>("salarioNeto"));
+
+        java.text.NumberFormat formatoDinero = java.text.NumberFormat.getCurrencyInstance(java.util.Locale.US);
+        colSalarioBruto.setCellFactory(columna -> new TableCell<Jugador, Double>() {
+            @Override
+            protected void updateItem(Double cantidad, boolean vacio) {
+                super.updateItem(cantidad, vacio);
+                if (vacio || cantidad == null) {
+                    setText(null);
+                } else {
+                    setText(formatoDinero.format(cantidad));
+                }
+            }
+        });
+
+        colSalarioNeto.setCellFactory(columna -> new TableCell<Jugador, Double>() {
+            @Override
+            protected void updateItem(Double cantidad, boolean vacio) {
+                super.updateItem(cantidad, vacio);
+                if (vacio || cantidad == null) {
+                    setText(null);
+                } else {
+                    setText(formatoDinero.format(cantidad));
+                }
+            }
+        });
     }
 
     private void configurarFiltros() {
@@ -71,14 +116,12 @@ public class BasketController implements Initializable {
     }
 
     private void cargarCombosAuxiliares() {
-        comboPosicion.setItems(FXCollections.observableArrayList("Base", "Escolta", "Alero", "Ala-Pivot", "Pivot"
-        ));
-
+        comboPosicion.setItems(FXCollections.observableArrayList("BASE", "ESCOLTA", "ALERO", "ALA-PIVOT", "PIVOT"));
     }
 
     @FXML
     protected void onGuardarClick() {
-        System.out.println("Guardafo");
+        System.out.println("Guardado");
     }
 
     @FXML
