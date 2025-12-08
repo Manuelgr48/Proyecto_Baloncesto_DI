@@ -29,6 +29,7 @@ public class BasketController implements Initializable {
     @FXML private TableColumn<Jugador, String> colPosicion;
     @FXML private TableColumn<Jugador, String> colEquipo;
     @FXML private TableColumn<Jugador, Integer> colAltura;
+    @FXML private TableColumn<Jugador, Double> colPeso;
     @FXML private TableColumn<Jugador, Double> colSalarioBruto;
     @FXML private TableColumn<Jugador, Double> colSalarioNeto;
     @FXML private TableColumn<Jugador, Integer> colEdad;
@@ -136,6 +137,7 @@ public class BasketController implements Initializable {
         colApellidos.setCellValueFactory(new PropertyValueFactory<>("apellidos"));
         colPosicion.setCellValueFactory(new PropertyValueFactory<>("posicion"));
         colAltura.setCellValueFactory(new PropertyValueFactory<>("alturaCm"));
+        colPeso.setCellValueFactory(new PropertyValueFactory<>("pesoKg"));
         colEquipo.setCellValueFactory(new PropertyValueFactory<>("nombreEquipo"));
         colEdad.setCellValueFactory(new PropertyValueFactory<>("edad"));
         colSalarioBruto.setCellValueFactory(new PropertyValueFactory<>("salarioBruto"));

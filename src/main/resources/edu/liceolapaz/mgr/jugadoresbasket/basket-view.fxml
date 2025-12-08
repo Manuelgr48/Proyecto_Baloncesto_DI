@@ -53,6 +53,7 @@
                 <TableColumn fx:id="colPosicion" prefWidth="79.0" text="Pos." />
                 <TableColumn fx:id="colEquipo" prefWidth="89.0" text="Equipo" />
                 <TableColumn fx:id="colAltura" prefWidth="64.0" text="Alt(cm)" />
+                <TableColumn fx:id="colPeso" prefWidth="60.0" text="Peso(kg)" />
                 <TableColumn fx:id="colSalarioBruto" prefWidth="62.0" text="Salario Bruto" />
 
                 <TableColumn fx:id="colSalarioNeto" prefWidth="62.0" text="Salario Neto*" />
