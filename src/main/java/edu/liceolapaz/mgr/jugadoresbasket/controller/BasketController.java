@@ -1,7 +1,6 @@
 package edu.liceolapaz.mgr.jugadoresbasket.controller;
 
-import edu.liceolapaz.mgr.jugadoresbasket.dao.JugadorDAO;
-import edu.liceolapaz.mgr.jugadoresbasket.dao.JugadorDAOImpl;
+import edu.liceolapaz.mgr.jugadoresbasket.dao.*;
 import edu.liceolapaz.mgr.jugadoresbasket.model.Equipo;
 import edu.liceolapaz.mgr.jugadoresbasket.model.Jugador;
 import javafx.collections.FXCollections;
@@ -49,29 +48,37 @@ public class BasketController implements Initializable {
     @FXML private Button botonFavoritos;
 
     private JugadorDAO jugadorDAO;
-    private ObservableList<Jugador> masterData;
+    private EquipoDAO equipoDAO;
 
+    private ObservableList<Jugador> masterData;
     private FilteredList<Jugador> filteredData;
+
+    private Jugador jugadorSeleccionado;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         jugadorDAO = new JugadorDAOImpl();
+        equipoDAO = new EquipoDAOImpl();
+
         configurarTabla();
-
         cargarJugadores();
-
         configurarFiltros();
-
         cargarCombosAuxiliares();
+
+        tablaJugadores.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            jugadorSeleccionado = newSelection;
+            if (jugadorSeleccionado != null) {
+                rellenarFormulario(jugadorSeleccionado);
+            }
+        });
     }
 
     private void cargarJugadores() {
         List<Jugador> jugadoresDB = jugadorDAO.getAllJugadores();
         masterData = FXCollections.observableArrayList(jugadoresDB);
-
         filteredData = new FilteredList<>(masterData, p -> true);
-
         tablaJugadores.setItems(filteredData);
+        aplicarFiltros();
     }
 
     private void configurarFiltros() {
@@ -157,11 +164,108 @@ public class BasketController implements Initializable {
 
     private void cargarCombosAuxiliares() {
         comboPosicion.setItems(FXCollections.observableArrayList("BASE", "ESCOLTA", "ALERO", "ALA-PIVOT", "PIVOT"));
+        List<Equipo> equipos = equipoDAO.getAllEquipos();
+        comboEquipo.setItems(FXCollections.observableArrayList(equipos));
     }
 
-    @FXML protected void onGuardarClick() { System.out.println("Guardado"); }
-    @FXML protected void onEliminarClick() { System.out.println("Eliminado"); }
-    @FXML protected void onLimpiarFormularioClick() {
-        textoNombre.clear(); textoApellidos.clear();
+    private void rellenarFormulario(Jugador j) {
+        textoNombre.setText(j.getNombre());
+        textoApellidos.setText(j.getApellidos());
+        dateFechaNacimiento.setValue(j.getFechaNacimiento());
+        textoAltura.setText(String.valueOf(j.getAlturaCm()));
+        textoPeso.setText(String.valueOf(j.getPesoKg()));
+        textoSalario.setText(String.valueOf(j.getSalarioBruto()));
+        comboPosicion.setValue(j.getPosicion());
+        checkLesionado.setSelected(j.isLesionado());
+
+        for (Equipo e : comboEquipo.getItems()) {
+            if (e.getId() == j.getEquipoId()) {
+                comboEquipo.setValue(e);
+                break;
+            }
+        }
+        botonGuardar.setText("Modificar");
+    }
+
+    @FXML
+    protected void onGuardarClick() {
+        if (textoNombre.getText().isEmpty() || comboEquipo.getValue() == null || dateFechaNacimiento.getValue() == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Datos incompletos");
+            return;
+        }
+
+        try {
+            String nombre = textoNombre.getText();
+            String apellidos = textoApellidos.getText();
+            java.time.LocalDate nacimiento = dateFechaNacimiento.getValue();
+            int altura = Integer.parseInt(textoAltura.getText());
+            double peso = Double.parseDouble(textoPeso.getText());
+            double salario = Double.parseDouble(textoSalario.getText());
+            String posicion = comboPosicion.getValue();
+            int idEquipo = comboEquipo.getValue().getId();
+            boolean lesionado = checkLesionado.isSelected();
+
+            if (jugadorSeleccionado == null) {
+                Jugador nuevo = new Jugador(0, nombre, apellidos, nacimiento, altura, peso, posicion, lesionado, salario, idEquipo, null);
+                jugadorDAO.addJugador(nuevo);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador creado");
+            } else {
+                jugadorSeleccionado.setNombre(nombre);
+                jugadorSeleccionado.setApellidos(apellidos);
+                jugadorSeleccionado.setFechaNacimiento(nacimiento);
+                jugadorSeleccionado.setAlturaCm(altura);
+                jugadorSeleccionado.setPesoKg(peso);
+                jugadorSeleccionado.setSalarioBruto(salario);
+                jugadorSeleccionado.setPosicion(posicion);
+                jugadorSeleccionado.setEquipoId(idEquipo);
+                jugadorSeleccionado.setLesionado(lesionado);
+
+                jugadorDAO.updateJugador(jugadorSeleccionado);
+                mostrarAlerta(Alert.AlertType.INFORMATION, "Jugador actualizado");
+            }
+            onLimpiarFormularioClick();
+            cargarJugadores();
+
+        } catch (NumberFormatException e) {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error: Altura, Peso y Salario deben ser números.");
+        }
+    }
+
+    @FXML
+    protected void onEliminarClick() {
+        if (jugadorSeleccionado == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Selecciona un jugador para eliminar");
+            return;
+        }
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION, "¿Borrar a " + jugadorSeleccionado.getNombre() + "?");
+        if (confirm.showAndWait().get() == ButtonType.OK) {
+            jugadorDAO.deleteJugador(jugadorSeleccionado.getId());
+            onLimpiarFormularioClick();
+            cargarJugadores();
+        }
+    }
+
+    @FXML
+    protected void onLimpiarFormularioClick() {
+        textoNombre.clear();
+        textoApellidos.clear();
+        textoAltura.clear();
+        textoPeso.clear();
+        textoSalario.clear();
+        dateFechaNacimiento.setValue(null);
+        comboEquipo.setValue(null);
+        comboPosicion.setValue(null);
+        checkLesionado.setSelected(false);
+
+        jugadorSeleccionado = null;
+        botonGuardar.setText("Guardar");
+        tablaJugadores.getSelectionModel().clearSelection();
+    }
+
+    private void mostrarAlerta(Alert.AlertType tipo, String mensaje) {
+        Alert alert = new Alert(tipo);
+        alert.setContentText(mensaje);
+        alert.show();
     }
 }

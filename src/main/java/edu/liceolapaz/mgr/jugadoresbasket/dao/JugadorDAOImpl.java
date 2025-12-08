@@ -50,4 +50,68 @@ public class JugadorDAOImpl implements JugadorDAO {
         return lista;
     }
 
-}
+    @Override
+    public void addJugador(Jugador j) {
+        String sql = """
+        INSERT INTO jugadores (nombre, apellidos, fecha_nacimiento, altura_cm, peso_kg, 
+                               salario_bruto, posicion, equipo_id, lesionado) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)""";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+
+            configurarStatement(pstmt, j);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateJugador(Jugador j) {
+        String sql = """
+        UPDATE jugadores SET nombre=?, apellidos=?, fecha_nacimiento=?, altura_cm=?, 
+                             peso_kg=?, salario_bruto=?, posicion=?, equipo_id=?, lesionado=? 
+        WHERE id = ?""";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            configurarStatement(pstmt, j);
+            pstmt.setInt(10, j.getId());
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void deleteJugador(int id) {
+        String sql = "DELETE FROM jugadores WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void configurarStatement(PreparedStatement pstmt, Jugador j) throws SQLException {
+        pstmt.setString(1, j.getNombre());
+        pstmt.setString(2, j.getApellidos());
+        pstmt.setDate(3, java.sql.Date.valueOf(j.getFechaNacimiento()));
+        pstmt.setInt(4, j.getAlturaCm());
+        pstmt.setDouble(5, j.getPesoKg());
+        pstmt.setDouble(6, j.getSalarioBruto());
+        pstmt.setString(7, j.getPosicion());
+        pstmt.setInt(8, j.
+getEquipoId());
+        pstmt.setBoolean(9, j.isLesionado());
+    }
+    }
