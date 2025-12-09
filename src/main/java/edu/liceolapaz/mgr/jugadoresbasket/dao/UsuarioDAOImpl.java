@@ -46,4 +46,18 @@ public class UsuarioDAOImpl implements UsuarioDAO {
         }
         return usuario;
     }
+
+
+    @Override
+    public void agregarFavorito(int usuarioId, int jugadorId) throws SQLException {
+        String sql = "INSERT IGNORE INTO favoritos (usuario_id, jugador_id) VALUES (?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, usuarioId);
+            pstmt.setInt(2, jugadorId);
+            pstmt.executeUpdate();
+        }
+    }
 }

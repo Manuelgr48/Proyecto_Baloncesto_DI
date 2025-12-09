@@ -5,6 +5,6 @@ import java.sql.SQLException;
 
 public interface UsuarioDAO {
     boolean validarCredenciales(String username, String password) throws SQLException;
-
     Usuario getUsuarioPorUsername(String username) throws SQLException;
+    void agregarFavorito(int usuarioId, int jugadorId) throws SQLException;
 }

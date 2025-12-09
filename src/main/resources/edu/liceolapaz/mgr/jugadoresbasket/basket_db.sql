@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS jugadores (
 CREATE TABLE IF NOT EXISTS favoritos (
     usuario_id INT,
     jugador_id INT,
-    RIMARY KEY (usuario_id, jugador_id),
+    PRIMARY KEY (usuario_id, jugador_id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (jugador_id) REFERENCES jugadores(id) ON DELETE CASCADE
     );
@@ -95,6 +95,8 @@ INSERT INTO equipos (nombre, ciudad, conferencia) VALUES
 
 -------------------------------------------------------
 INSERT INTO jugadores (nombre, apellidos, fecha_nacimiento, altura_cm, peso_kg, posicion, lesionado, salario_bruto, equipo_id) VALUES
+
+-------------------------------------------------------
 
                                                                                                                                    ('Kristaps', 'Porzingis', '1995-08-02', 218, 109.0, 'ALA-PIVOT', FALSE, 36000000, (SELECT id FROM equipos WHERE nombre = 'Hawks')),
                                                                                                                                    ('Jrue', 'Holiday', '1990-06-12', 193, 93.0, 'BASE', FALSE, 36800000, (SELECT id FROM equipos WHERE nombre = 'Celtics')),

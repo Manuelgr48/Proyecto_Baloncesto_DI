@@ -48,6 +48,7 @@ public class BasketController implements Initializable {
     @FXML private Button botonLimpiarFiltros;
     @FXML private Button botonFavoritos;
 
+    private UsuarioDAO usuarioDAO;
     private JugadorDAO jugadorDAO;
     private EquipoDAO equipoDAO;
 
@@ -60,6 +61,7 @@ public class BasketController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         jugadorDAO = new JugadorDAOImpl();
         equipoDAO = new EquipoDAOImpl();
+        usuarioDAO = new UsuarioDAOImpl();
 
         configurarTabla();
         cargarJugadores();
@@ -72,6 +74,28 @@ public class BasketController implements Initializable {
                 rellenarFormulario(jugadorSeleccionado);
             }
         });
+    }
+    @FXML
+    protected void onFavoritosClick() {
+        if (jugadorSeleccionado == null) {
+            mostrarAlerta(Alert.AlertType.WARNING, "Selecciona un jugador ");
+            return;
+        }
+        try {
+            edu.liceolapaz.mgr.jugadoresbasket.model.Usuario usuarioActual =
+                    edu.liceolapaz.mgr.jugadoresbasket.model.UserSession.getInstance().getUsuarioLogueado();
+
+            if (usuarioActual == null) {
+                mostrarAlerta(Alert.AlertType.ERROR, "Error: No hay usuario logueado.");
+                return;
+            }
+            usuarioDAO.agregarFavorito(usuarioActual.getId(), jugadorSeleccionado.getId());
+
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Guardado " + jugadorSeleccionado.getNombre() + " añadido a favoritos.");
+        } catch (java.sql.SQLException e) {
+            e.printStackTrace();
+            mostrarAlerta(Alert.AlertType.ERROR, "Error al guardar favorito.");
+        }
     }
 
     private void cargarJugadores() {

@@ -26,9 +26,9 @@
                 <ToggleGroup fx:id="toggleConferencia" />
             </fx:define>
 
-            <RadioButton fx:id="rbTodas" selected="true" text="Todas" toggleGroup="$toggleConferencia" />
-            <RadioButton fx:id="rbEste" text="ESTE" toggleGroup="$toggleConferencia" />
-            <RadioButton fx:id="rbOeste" text="OESTE" toggleGroup="$toggleConferencia" />
+            <RadioButton fx:id="radioTodas" selected="true" text="Todas" toggleGroup="$toggleConferencia" />
+            <RadioButton fx:id="radioEste" text="ESTE" toggleGroup="$toggleConferencia" />
+            <RadioButton fx:id="radioOeste" text="OESTE" toggleGroup="$toggleConferencia" />
 
             <Separator prefWidth="200.0" />
 
@@ -125,7 +125,7 @@
                 <Button fx:id="botonLimpiar" onAction="#onLimpiarFormularioClick" text="Limpiar" />
             </HBox>
             <Separator prefWidth="200.0" />
-            <Button fx:id="botonFavoritos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Añadir a Favoritos ⭐" />
+            <Button fx:id="botonFavoritos" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Añadir a Favoritos" onAction="#onFavoritosClick" />
         </VBox>
     </right>
 </BorderPane>

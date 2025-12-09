@@ -55,6 +55,9 @@ public class LoginController implements Initializable {
             if (usuarioDAO.validarCredenciales(username, password)) {
                 System.out.println("Login correcto: " + username);
 
+                edu.liceolapaz.mgr.jugadoresbasket.model.Usuario usuario = usuarioDAO.getUsuarioPorUsername(username);
+                edu.liceolapaz.mgr.jugadoresbasket.model.UserSession.getInstance().setUsuarioLogueado(usuario);
+
                 mostrarAlerta(Alert.AlertType.INFORMATION, "Bienvenido", "Login correcto. Cargando sistema...");
 
                 cambiarEscena(event, "basket-view.fxml");
